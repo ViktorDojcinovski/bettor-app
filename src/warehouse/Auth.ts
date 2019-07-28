@@ -54,6 +54,20 @@ const actions = {
     delete axios.defaults.headers.common['Authorization'];
     router.push('/login');
     return;
+  },
+  async confirmEmail({ commit }: any, token: any) {
+    try {
+      let res = await axios.post(
+        'http://localhost:8001/api/users/confirmation',
+        token
+      );
+      if (res.data.success) {
+        commit('confirmation_success');
+      }
+      return res;
+    } catch (err) {
+      commit('confirmation_error', err);
+    }
   }
 };
 
@@ -85,6 +99,13 @@ const mutations = {
     state.error = null;
   },
   register_error(state: { error: any }, error: any) {
+    state.error = error.response.data.message;
+  },
+  confirmation_success(state: { status: any; error: any }) {
+    state.status = 'success';
+    state.error = null;
+  },
+  confirmation_error(state: { status: any; error: any }, error: any) {
     state.error = error.response.data.message;
   },
   logout(state: { token: string; user: {} }) {

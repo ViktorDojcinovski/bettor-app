@@ -41,6 +41,17 @@
               />
             </div>
             <div class="form-group">
+              <label for="name">Username</label>
+              <input
+                id="username"
+                type="text"
+                placeholder="username"
+                name="username"
+                v-model="username"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
               <label for="name">Password</label>
               <input
                 id="password"
@@ -81,6 +92,7 @@ export default {
       firstname: "",
       lastname: "",
       email: "",
+      username: "",
       password: "",
       confirm_password: ""
     };
@@ -92,14 +104,11 @@ export default {
         firstname: this.firstname,
         lastname: this.lastname,
         email: this.email,
+        username: this.username,
         password: this.password,
         confirm_password: this.confirm_password
       };
-      this.register(userData).then(res => {
-        if (res.data.success) {
-          this.$router.push("/login");
-        }
-      });
+      this.register(userData);
     }
   }
 };

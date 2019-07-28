@@ -1,0 +1,129 @@
+<template>
+  <div>
+    <h5>Enter the stake and the odds, and the calculator will calculate your payout!</h5>
+    <label for="format">Select Odds Format:</label>
+    <select name="format" id="format" v-model="odds_format">
+      <option value="decimal">Decimal</option>
+      <option value="american">American</option>
+      <option value="fractional">Fractional</option>
+    </select>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6">
+          <h5>Stake</h5>
+          <input
+            type="text"
+            name="stake"
+            id="stake"
+            placeholder="Enter stake"
+            v-model="stake"
+            @input="calculatePayout(calculatedOdds())"
+          />
+        </div>
+        <div class="col-6">
+          <h5>Odds</h5>
+          <TextInput
+            v-for="(field, index) in oddsFields"
+            :key="index"
+            :placeholder="field.placeholder"
+            :value="field.value"
+            @input="changeFieldValue($event, field)"
+          />
+          <button class="btn btn-success ml-auto" @click.prevent="addOddsField">Add odds</button>
+          <button class="btn btn-danger ml-auto" @click.prevent="resetOddsFields">Clear</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="col-6 mr-auto">
+        <div class="payout-wrapper">
+          <span>Payout</span>
+          <div class="badge badge-secondary m-3">$ {{ payout }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from "vue";
+import TextInput from "@/components/TextInput";
+
+export default Vue.extend({
+  name: "calculator",
+  components: {
+    TextInput
+  },
+  data() {
+    return {
+      stake: null,
+      payout: 0,
+      oddsFormat: "decimal",
+      oddsFields: [
+        {
+          placeholder: "Enter odds",
+          value: null
+        }
+      ]
+    };
+  },
+  methods: {
+    calculatePayout(odds) {
+      this.payout = (this.stake * odds).toFixed(2);
+    },
+    changeFieldValue(event, field) {
+      field.value = event;
+      this.calculatePayout(this.calculatedOdds());
+    },
+    addOddsField() {
+      this.oddsFields.push({
+        placeholder: "Enter odds",
+        value: null
+      });
+    },
+    calculatedOdds() {
+      return (
+        this.oddsFields.reduce((acc, current) => {
+          if (current.value) {
+            return acc * current.value;
+          }
+        }, 1) || 0
+      );
+    },
+    resetOddsFields() {
+      this.oddsFields = [
+        {
+          placeholder: "Enter odds",
+          value: null
+        }
+      ];
+      this.calculatePayout(this.calculatedOdds());
+    }
+  }
+});
+</script>
+
+<style lang="scss">
+h5 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.6em;
+}
+input {
+  width: 100%;
+  height: 40px;
+  margin: 5px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #aaa;
+}
+button.btn {
+  width: 50%;
+  font-size: 0.6em;
+}
+.payout-wrapper {
+  div {
+    font-size: 1.8em;
+  }
+}
+</style>

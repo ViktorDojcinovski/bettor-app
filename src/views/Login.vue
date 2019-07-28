@@ -8,13 +8,13 @@
         <div class="card-body">
           <form @submit.prevent="loginUser">
             <div class="form-group">
-              <label for="email">Email</label>
+              <label for="email">Username</label>
               <input
-                id="email"
+                id="username"
                 type="text"
-                placeholder="email"
-                name="email"
-                v-model="email"
+                placeholder="username"
+                name="username"
+                v-model="username"
                 class="form-control"
               />
             </div>
@@ -45,7 +45,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      email: "",
+      username: "",
       password: ""
     };
   },
@@ -53,18 +53,14 @@ export default {
     ...mapActions(["login"]),
     loginUser() {
       let user = {
-        email: this.email,
+        username: this.username,
         password: this.password
       };
-      this.login(user)
-        .then(res => {
-          if (res.data.success) {
-            this.$router.push("/dashboard");
-          }
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      this.login(user).then(res => {
+        if (res.data.success) {
+          this.$router.push("/dashboard");
+        }
+      });
     }
   }
 };

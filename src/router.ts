@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
 import store from './store';
+
+import Home from './views/Home.vue';
+import ConfirmEmail from './views/ConfirmEmail.vue';
 
 Vue.use(Router);
 
@@ -13,6 +15,14 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/confirmation',
+      name: 'confirmation',
+      component: ConfirmEmail,
+      meta: {
+        requiresGuest: true
+      }
     },
     {
       path: '/login',

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Navbar msg="Welcome to Your Vue.js + TypeScript App" />
+    <p>Welcome home</p>
   </div>
 </template>
 
@@ -8,5 +8,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  name: "home",
+  components: {}
 });
 </script>
