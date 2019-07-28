@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Navbar msg="Welcome to Your Vue.js + TypeScript App" />
+    <Errors v-if="this.error" :msg="error" />
     <div class="container">
       <router-view />
     </div>
@@ -8,12 +9,18 @@
 </template>
 <script>
 import Vue from "vue";
-import Navbar from "@/components/Navbar.vue";
+import { mapGetters } from "vuex";
+import Navbar from "@/components/Navbar";
+import Errors from "@/components/Errors";
 
 export default Vue.extend({
   name: "app",
   components: {
-    Navbar
+    Navbar,
+    Errors
+  },
+  computed: {
+    ...mapGetters(["error"])
   }
 });
 </script>

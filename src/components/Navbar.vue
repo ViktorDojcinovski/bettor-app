@@ -27,17 +27,17 @@
             <span class="sr-only">(current)</span>
           </router-link>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item active" v-if="isLoggedIn">
           <router-link class="nav-link" to="/dashboard">
             Dashboard
             <span class="sr-only">(current)</span>
           </router-link>
         </li>
-        <li class="nav-item active">
-          <router-link class="nav-link" to="/dashboard">
+        <li class="nav-item active" v-if="isLoggedIn">
+          <a class="nav-link" @click.prevent="logoutUser">
             Logout
             <span class="sr-only">(current)</span>
-          </router-link>
+          </a>
         </li>
       </ul>
     </div>
@@ -45,13 +45,22 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
-  name: "Navbar",
-  props: {
-    msg: String
+  computed: {
+    ...mapGetters(["isLoggedIn"])
+  },
+  methods: {
+    ...mapActions(["logout"]),
+    logoutUser() {
+      this.logout();
+    }
   }
 };
 </script>
 
 <style>
+a {
+  cursor: pointer;
+}
 </style>

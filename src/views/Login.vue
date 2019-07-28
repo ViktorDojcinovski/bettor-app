@@ -6,15 +6,15 @@
           <h4>Login</h4>
         </div>
         <div class="card-body">
-          <form>
+          <form @submit.prevent="loginUser">
             <div class="form-group">
-              <label for="name">Name</label>
+              <label for="email">Email</label>
               <input
-                id="firstname"
+                id="email"
                 type="text"
-                placeholder="name"
-                name="firstname"
-                v-model="firstname"
+                placeholder="email"
+                name="email"
+                v-model="email"
                 class="form-control"
               />
             </div>
@@ -41,19 +41,37 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      firstname: "",
+      email: "",
       password: ""
     };
   },
-  methods: {}
+  methods: {
+    ...mapActions(["login"]),
+    loginUser() {
+      let user = {
+        email: this.email,
+        password: this.password
+      };
+      this.login(user)
+        .then(res => {
+          if (res.data.success) {
+            this.$router.push("/dashboard");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  }
 };
 </script>
 
 <style scoped>
 .card {
-  width: 60%;
+  width: 50%;
 }
 </style>
