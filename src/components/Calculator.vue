@@ -2,7 +2,7 @@
   <div>
     <h5>Enter the stake and the odds, and the calculator will calculate your payout!</h5>
     <label for="format">Select Odds Format:</label>
-    <select name="format" id="format" v-model="odds_format">
+    <select name="format" id="format" v-model="odds_format" @change="reasignFormat">
       <option value="decimal">Decimal</option>
       <option value="american">American</option>
       <option value="fractional">Fractional</option>
@@ -27,6 +27,7 @@
             :key="index"
             :placeholder="field.placeholder"
             :value="field.value"
+            :format="field.odds_format"
             @input="changeFieldValue($event, field)"
           />
           <button class="btn btn-success ml-auto" @click.prevent="addOddsField">Add odds</button>
@@ -48,6 +49,7 @@
 <script>
 import Vue from "vue";
 import TextInput from "@/components/TextInput";
+import { validateInput, calculate } from "../utils";
 
 export default Vue.extend({
   name: "calculator",
@@ -58,13 +60,8 @@ export default Vue.extend({
     return {
       stake: null,
       payout: 0,
-      oddsFormat: "decimal",
-      oddsFields: [
-        {
-          placeholder: "Enter odds",
-          value: null
-        }
-      ]
+      odds_format: "decimal",
+      oddsFields: []
     };
   },
   methods: {
@@ -78,14 +75,20 @@ export default Vue.extend({
     addOddsField() {
       this.oddsFields.push({
         placeholder: "Enter odds",
-        value: null
+        value: null,
+        format: this.odds_format
       });
     },
     calculatedOdds() {
       return (
         this.oddsFields.reduce((acc, current) => {
-          if (current.value) {
-            return acc * current.value;
+          const decimalValue = calculate(
+            validateInput(current),
+            current.format
+          );
+          console.log(decimalValue);
+          if (decimalValue) {
+            return acc * decimalValue;
           }
         }, 1) || 0
       );
@@ -94,10 +97,16 @@ export default Vue.extend({
       this.oddsFields = [
         {
           placeholder: "Enter odds",
-          value: null
+          value: null,
+          format: this.odds_format
         }
       ];
       this.calculatePayout(this.calculatedOdds());
+    },
+    reasignFormat() {
+      this.oddsFields.forEach(field => {
+        field.format = this.odds_format;
+      });
     }
   }
 });

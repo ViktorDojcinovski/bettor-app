@@ -4,6 +4,7 @@
       type="text"
       :placeholder="placeholder"
       :value="value"
+      :format="format"
       @change="$emit('input', $event.target.value)"
     />
   </div>
@@ -12,7 +13,7 @@
 <script>
 export default {
   name: "odd",
-  props: ["placeholder", "value"]
+  props: ["placeholder", "value", "format"]
 };
 </script>
 
