@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="calc-wrapper">
     <h5>Enter the stake and the odds, and the calculator will calculate your payout!</h5>
     <label for="format">Select Odds Format:</label>
     <select name="format" id="format" v-model="odds_format" @change="reasignFormat">
@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="col-6 mr-auto">
+      <div class="col-12">
         <div class="payout-wrapper">
           <span>Payout</span>
           <div class="badge badge-secondary m-3">$ {{ payout }}</div>
@@ -48,13 +48,16 @@
 
 <script>
 import Vue from "vue";
+
+import LoadingIndicator from "@/components/LoadinIndicator";
 import TextInput from "@/components/TextInput";
 import { validateInput, calculate } from "../utils";
 
 export default Vue.extend({
   name: "calculator",
   components: {
-    TextInput
+    TextInput,
+    LoadingIndicator
   },
   data() {
     return {
@@ -112,26 +115,41 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-h5 {
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.6em;
-}
-input {
-  width: 100%;
-  height: 40px;
-  margin: 5px 0;
-  text-align: center;
-  font-size: 14px;
-  color: #aaa;
-}
-button.btn {
-  width: 50%;
-  font-size: 0.6em;
-}
-.payout-wrapper {
-  div {
-    font-size: 1.8em;
+.calc-wrapper {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #eee;
+  h5 {
+    text-align: left;
+    font-weight: bold;
+    font-size: 1em;
+  }
+  input {
+    width: 100%;
+    height: 40px;
+    margin: 5px 0;
+    border: 1px solid #aaa;
+    text-align: center;
+    font-size: 14px;
+    color: #aaa;
+  }
+  select {
+    height: 40px;
+    margin-left: 20px;
+    font-size: 14px;
+    color: #aaa;
+  }
+  button.btn {
+    height: 40px;
+    margin-top: 5px;
+    width: 50%;
+    font-size: 0.6em;
+  }
+  .payout-wrapper {
+    text-align: right;
+    div {
+      font-size: 1.8em;
+    }
   }
 }
 </style>

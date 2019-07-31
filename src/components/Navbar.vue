@@ -59,8 +59,11 @@ export default {
 };
 </script>
 
-<style>
-a {
-  cursor: pointer;
+<style lang="scss">
+nav {
+  margin-bottom: 60px;
+  a {
+    cursor: pointer;
+  }
 }
 </style>

@@ -1,12 +1,17 @@
 import axios from 'axios';
 import router from '../router';
 
-const state = {};
+const state = {
+  loading_data: 'loading'
+};
 
-const getters = {};
+const getters = {
+  loading_data: (state: { loading_data: string }) => state.loading_data
+};
 
 const actions = {
   async getOddsApiData({ commit }: any) {
+    commit('loading_data');
     let res = await axios.get(
       'https://odds.p.rapidapi.com/v1/odds?sport=soccer_epl&region=uk&mkt=h2h',
       {
@@ -18,12 +23,20 @@ const actions = {
     );
     if (res.data.success) {
       if (res.data.error) throw new Error(res.data.error);
+      commit('loading_data_success');
       return res.data;
     }
   }
 };
 
-const mutations = {};
+const mutations = {
+  loading_data_success(state: { loading_data: string }) {
+    state.loading_data = 'success';
+  },
+  loading_data(state: { loading_data: string }) {
+    state.loading_data = 'loading';
+  }
+};
 
 export default {
   state,

@@ -1,47 +1,54 @@
 <template>
-  <div>
+  <div class="table-wrapper">
     <h5>
       Premier league odds from Marathon Bet betting house
       <small>*home team is green colored</small>
     </h5>
-    <div>
-      <input
-        type="text"
-        placeholder="search team"
-        v-model="team_search"
-        @input="onSearchCallback()"
-      />
+    <LoadingIndicator v-if="this.loading_data === 'loading'" />
+    <div v-if="this.loading_data === 'success'">
+      <div>
+        <input
+          type="text"
+          placeholder="search team"
+          v-model="team_search"
+          @input="onSearchCallback()"
+        />
+      </div>
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col" class="clickable" @click="sort('index'    )">#</th>
+            <th scope="col">Game</th>
+            <th scope="col" class="clickable" @click="sort('hostWin')">Host win</th>
+            <th scope="col" class="clickable" @click="sort('tied')">Tied</th>
+            <th scope="col" class="clickable" @click="sort('guestWin')">Guest win</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(game, index) in sortedGames" :key="index">
+            <th scope="row">{{ game.index }}</th>
+            <td>
+              <span
+                :class="{ 'text-success': game.homeTeam === game.firstTeam }"
+              >{{ game.firstTeam }}</span> -
+              <span
+                :class="{ 'text-success': game.homeTeam === game.secondTeam }"
+              >{{ game.secondTeam }}</span>
+            </td>
+            <td>{{ game.hostWin }}</td>
+            <td>{{ game.tied }}</td>
+            <td>{{ game.guestWin }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <table class="table table-dark">
-      <thead>
-        <tr>
-          <th scope="col" class="clickable" @click="sort('index'    )">#</th>
-          <th scope="col">Game</th>
-          <th scope="col" class="clickable" @click="sort('hostWin')">Host win</th>
-          <th scope="col" class="clickable" @click="sort('tied')">Tied</th>
-          <th scope="col" class="clickable" @click="sort('guestWin')">Guest win</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(game, index) in sortedGames" :key="index">
-          <th scope="row">{{ game.index }}</th>
-          <td>
-            <span :class="{ 'text-success': game.homeTeam === game.firstTeam }">{{ game.firstTeam }}</span> -
-            <span
-              :class="{ 'text-success': game.homeTeam === game.secondTeam }"
-            >{{ game.secondTeam }}</span>
-          </td>
-          <td>{{ game.hostWin }}</td>
-          <td>{{ game.tied }}</td>
-          <td>{{ game.guestWin }}</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+
+import LoadingIndicator from "@/components/LoadinIndicator";
 
 export default {
   data() {
@@ -52,6 +59,9 @@ export default {
       currentSort: "index",
       currentSortDir: "asc"
     };
+  },
+  components: {
+    LoadingIndicator
   },
   methods: {
     ...mapActions(["getOddsApiData"]),
@@ -91,9 +101,11 @@ export default {
     this.getOddsApiData().then(data => {
       this.games = this.structureData(data.data);
       this.filteredGames = this.structureData(data.data);
+      console.log(status);
     });
   },
   computed: {
+    ...mapGetters(["loading_data"]),
     sortedGames: function() {
       return this.filteredGames.sort((a, b) => {
         let modifier = 1;
@@ -107,8 +119,26 @@ export default {
 };
 </script>
 
-<style>
-th.clickable {
-  cursor: pointer;
+<style lang="scss">
+.table-wrapper {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  h5 {
+    margin: 20px 0;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: left;
+  }
+  input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  th.clickable {
+    cursor: pointer;
+  }
 }
 </style>

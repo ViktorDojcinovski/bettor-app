@@ -129,9 +129,6 @@ export default {
     verifyRecaptcha() {
       this.recaptcha_verified = true;
     }
-  },
-  mounted: function() {
-    console.log(this.captcha_key);
   }
 };
 </script>
