@@ -86,7 +86,6 @@ export default Vue.extend({
             validateInput(current),
             current.format
           );
-          console.log(decimalValue);
           if (decimalValue) {
             return acc * decimalValue;
           }
