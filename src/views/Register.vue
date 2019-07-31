@@ -73,7 +73,12 @@
                 class="form-control"
               />
             </div>
-            <button class="btn btn-primary">Register</button>
+            <vue-recaptcha
+              :sitekey="this.captcha_key"
+              :loadRecaptchaScript="true"
+              @verify="verifyRecaptcha"
+            ></vue-recaptcha>
+            <button :disabled="!this.recaptcha_verified" class="btn btn-primary">Register</button>
             <small class="p-4">
               <router-link to="/login">Already have account?</router-link>
             </small>
@@ -85,7 +90,13 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { mapActions } from "vuex";
+import VueHead from "vue-head";
+import VueRecaptcha from "vue-recaptcha";
+
+Vue.use(VueHead);
+
 export default {
   data() {
     return {
@@ -94,8 +105,13 @@ export default {
       email: "",
       username: "",
       password: "",
-      confirm_password: ""
+      confirm_password: "",
+      recaptcha_verified: false,
+      captcha_key: process.env.VUE_APP_SITE_KEY_GOOGLE_RECAPTCHA
     };
+  },
+  components: {
+    VueRecaptcha
   },
   methods: {
     ...mapActions(["register"]),
@@ -109,7 +125,13 @@ export default {
         confirm_password: this.confirm_password
       };
       this.register(userData);
+    },
+    verifyRecaptcha() {
+      this.recaptcha_verified = true;
     }
+  },
+  mounted: function() {
+    console.log(this.captcha_key);
   }
 };
 </script>
